@@ -15,10 +15,10 @@ export default class CardService {
       const titles = this.#database
         .filter(({ title }) => !!keyword ? title.toLowerCase().includes(keyword.toLowerCase()) : true)
 
-        if(Keyword)  {
+        if(keyword) {
           this.#cardListWorker.postMessage({mexItems: 1e5 })
         }
-        
+
       const cards = titles.map(item => {
         return {
           background: item.imageUrl,
