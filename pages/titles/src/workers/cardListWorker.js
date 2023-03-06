@@ -1,14 +1,14 @@
-onmessage = ({data}) => { 
-    let counter = 0                        //funçao global dentro do worker e os dados dele vem dentro
-
+oonmessage = ({ data }) => {
+    let counter = 0
+  
     console.log('activating blocking operation...', data.maxItems)
     console.time('blocking-op')
     // blocking function
     // 1e5 = 100.000
-    for ( ; counter < data.maxItems; counter++) console.log('.')
-    console.timeEnd('blocking-op')      //dentro do objeto data 
-
+    for (; counter < data.maxItems; counter++) console.log('.')
+    console.timeEnd('blocking-op')
+  
     postMessage(
-        {response: 'ok', data: counter} 
+      { response: 'ok', data: counter }
     )
-}
+  }
