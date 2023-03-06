@@ -1,53 +1,35 @@
-export default class CardsController {
-    #itemsPerLine = 5
-    #view
-    #service
-    constructor({ view, service }) {
-      this.#view = view
-      this.#service = service
-    }
-  
-    async #loadDB() {
-      return this.#service.loadCards()
-    }
-  
-    addCards(keyword) {
-      const cards = this.#service.filterTitles(keyword)
-      const totalCards = cards.length
-  
-      if (!totalCards) {
-        this.#view.updateSearchTitleBarTotal(totalCards)
-        return
-      }
-  
-      this.#view.addCards(cards, this.#itemsPerLine)
-    }
-  
-    #onSearchInput(keyword) {
-      this.#view.clearCards()
-  
-      console.log('activating blocking operation...')
-      console.time('blocking-op')
-      // blocking function
-      for (let counter = 0; counter < 1e5; counter++) console.log()
-      console.timeEnd('blocking-op')
-  
-      console.log('blocking operation freed up ...')
-  
-      this.addCards(keyword)
-    }
-  
-    async init() {
-      await this.#loadDB()
-      this.#view.configureOnSearchInput(
-        this.#onSearchInput.bind(this)
-      )
-  
-      this.addCards("")
-    }
-  
-    static async initialize(deps) {
-      const controller = new CardsController(deps)
-      return controller.init()
-    }
+
+export default class CardsView {
+  #browseSearchList = document.getElementById('browseSearch')
+  #inputSearch = document.getElementById('inputSearch')
+  #searchTitleBar = document.getElementById('searchTitleBar')
+
+  clearCards() {
+    Array.from(this.#browseSearchList.children).forEach(c => c.remove())
   }
+
+  configureOnSearchInput(fn) {
+    this.#inputSearch.value = ''
+    this.#inputSearch.addEventListener('input', (event) => {
+      const target = event.target
+      target.disabled = true
+      fn(target.value)
+      target.disabled = false
+      this.#inputSearch.focus()
+    })
+  }
+
+  updateSearchTitleBarTotal(total) {
+    this.#searchTitleBar.innerText = `BROWSE SEARCH (${total})`
+  }
+
+  addCards(cards, itemsPerLine) {
+    window.AddCardsOnBrowseSearchGrid({
+      cards,
+      itemsPerLine
+    })
+
+    this.updateSearchTitleBarTotal(cards.length)
+  }
+
+}
