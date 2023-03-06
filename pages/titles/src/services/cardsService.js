@@ -2,7 +2,7 @@ export default class CardService {
     #database = []
     #dbUrl = ''
     #cardListWorker
-    constructor({ dbUrl }) {
+    constructor({ dbUrl, cardListWorker }) {
       this.#dbUrl = dbUrl
       this.#cardListWorker = cardListWorker
     }
